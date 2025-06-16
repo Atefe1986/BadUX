@@ -1,6 +1,6 @@
 import { router } from "expo-router";
-import React from "react";
-import { Button, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { Button, Pressable, StyleSheet, TextInput } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -10,16 +10,81 @@ import { useAuth } from "./_layout";
 export default function LoginScreen() {
   const { setIsLoggedIn } = useAuth();
   const colorScheme = useColorScheme();
+  const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleLogin = () => {
     setIsLoggedIn(true);
     router.replace("/private");
   };
 
+  const handleSignup = () => {
+    if (password === confirmPassword) {
+      setIsLoggedIn(true);
+      router.replace("/private");
+    }
+  };
+
   return (
     <ThemedView style={styles.container}>
-      <ThemedText type="title">Login</ThemedText>
-      <Button title="Login" onPress={handleLogin} />
+      <ThemedView style={styles.tabContainer}>
+        <Pressable onPress={() => setActiveTab("login")}>
+          <ThemedText style={[styles.tabText, activeTab === "login" && styles.activeTab]}>Login</ThemedText>
+        </Pressable>
+        <Pressable onPress={() => setActiveTab("signup")}>
+          <ThemedText style={[styles.tabText, activeTab === "signup" && styles.activeTab]}>Signup</ThemedText>
+        </Pressable>
+      </ThemedView>
+
+      {activeTab === "login" ? (
+        <ThemedView style={styles.formContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Username"
+            value={username}
+            onChangeText={setUsername}
+            placeholderTextColor={colorScheme === "dark" ? "#666" : "#999"}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            placeholderTextColor={colorScheme === "dark" ? "#666" : "#999"}
+          />
+          <Button title="Login" onPress={handleLogin} />
+        </ThemedView>
+      ) : (
+        <ThemedView style={styles.formContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Username"
+            value={username}
+            onChangeText={setUsername}
+            placeholderTextColor={colorScheme === "dark" ? "#666" : "#999"}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            placeholderTextColor={colorScheme === "dark" ? "#666" : "#999"}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            secureTextEntry
+            placeholderTextColor={colorScheme === "dark" ? "#666" : "#999"}
+          />
+          <Button title="Signup" onPress={handleSignup} />
+        </ThemedView>
+      )}
     </ThemedView>
   );
 }
@@ -30,5 +95,27 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 20,
+  },
+  tabContainer: {
+    flexDirection: "row",
+    gap: 20,
+    marginBottom: 20,
+  },
+  tabText: {
+    fontSize: 18,
+  },
+  activeTab: {
+    textDecorationLine: "underline",
+  },
+  formContainer: {
+    width: "80%",
+    gap: 15,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#666",
+    borderRadius: 5,
+    padding: 10,
+    color: "white",
   },
 });
