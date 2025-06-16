@@ -39,7 +39,6 @@ export default function OnboardingScreen() {
       console.log("scrollToNext", currentIndex + 1);
 
       slidesRef.current.scrollToOffset({ offset: (currentIndex + 1) * width });
-      setCurrentIndex(currentIndex + 1);
     }
   };
 
@@ -61,6 +60,12 @@ export default function OnboardingScreen() {
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}
+          onViewableItemsChanged={({ viewableItems }) => {
+            const visibleIndex = viewableItems[0]?.index;
+            if (visibleIndex !== null && visibleIndex !== currentIndex) {
+              setCurrentIndex(visibleIndex);
+            }
+          }}
           ref={slidesRef}
           keyExtractor={(item) => item.id}
         />

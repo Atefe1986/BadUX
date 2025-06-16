@@ -30,7 +30,7 @@ export default function RootLayout() {
       <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
         <Stack>
           <Stack.Protected guard={!isLoggedIn}>
-            <Stack.Screen name="login" options={{ headerShown: false }} />
+            <Stack.Screen name="index" options={{ headerShown: false }} />
           </Stack.Protected>
 
           <Stack.Protected guard={isLoggedIn}>
