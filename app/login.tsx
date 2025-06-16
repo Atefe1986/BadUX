@@ -1,6 +1,8 @@
 import { router } from "expo-router";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import { Button, Pressable, StyleSheet, TextInput } from "react-native";
+import { auth } from "../firebase/firebaseConfig";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -16,14 +18,28 @@ export default function LoginScreen() {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleLogin = () => {
-    setIsLoggedIn(true);
-    router.replace("/private");
+    signInWithEmailAndPassword(auth, username, password)
+      .then(() => {
+        setIsLoggedIn(true);
+        router.replace("/private");
+      })
+      .catch((error) => {
+        console.error("Login error:", error);
+        // Handle login error (e.g., show an alert)
+      });
   };
 
   const handleSignup = () => {
     if (password === confirmPassword) {
-      setIsLoggedIn(true);
-      router.replace("/private");
+      createUserWithEmailAndPassword(auth, username, password)
+        .then(() => {
+          setIsLoggedIn(true);
+          router.replace("/private");
+        })
+        .catch((error) => {
+          console.error("Signup error:", error);
+          // Handle signup error (e.g., show an alert)
+        });
     }
   };
 
