@@ -1,12 +1,13 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import { Button, Pressable, StyleSheet, TextInput } from "react-native";
-import { auth } from "../firebase/firebaseConfig";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { auth } from "../firebase/firebaseConfig";
 import { useAuth } from "./_layout";
 
 export default function LoginScreen() {
@@ -17,11 +18,25 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const checkOnboardingStatus = async () => {
+    try {
+      const onboardingComplete = await AsyncStorage.getItem("@onboarding_complete");
+      if (onboardingComplete === "true") {
+        router.replace("/private");
+      } else {
+        router.replace("/onboarding");
+      }
+    } catch (error) {
+      console.error("Error checking onboarding status:", error);
+      router.replace("/onboarding");
+    }
+  };
+
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, username, password)
       .then(() => {
         setIsLoggedIn(true);
-        router.replace("/private");
+        checkOnboardingStatus();
       })
       .catch((error) => {
         console.error("Login error:", error);
@@ -34,7 +49,7 @@ export default function LoginScreen() {
       createUserWithEmailAndPassword(auth, username, password)
         .then(() => {
           setIsLoggedIn(true);
-          router.replace("/private");
+          router.replace("/onboarding");
         })
         .catch((error) => {
           console.error("Signup error:", error);
