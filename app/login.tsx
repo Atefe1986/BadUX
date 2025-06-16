@@ -1,4 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
@@ -19,17 +18,19 @@ export default function LoginScreen() {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const checkOnboardingStatus = async () => {
-    try {
-      const onboardingComplete = await AsyncStorage.getItem("@onboarding_complete");
-      if (onboardingComplete === "true") {
-        router.replace("/private");
-      } else {
-        router.replace("/onboarding");
-      }
-    } catch (error) {
-      console.error("Error checking onboarding status:", error);
-      router.replace("/onboarding");
-    }
+    router.replace("/onboarding");
+    // Uncomment the following code if you want to check onboarding status using AsyncStorage
+    // try {
+    //   const onboardingComplete = await AsyncStorage.getItem("@onboarding_complete");
+    //   if (onboardingComplete === "true") {
+    //     router.replace("/private");
+    //   } else {
+    //     router.replace("/onboarding");
+    //   }
+    // } catch (error) {
+    //   console.error("Error checking onboarding status:", error);
+    //   router.replace("/onboarding");
+    // }
   };
 
   const handleLogin = () => {
@@ -73,17 +74,17 @@ export default function LoginScreen() {
         <ThemedView style={styles.formContainer}>
           <TextInput
             style={styles.input}
-            placeholder="Username"
-            value={username}
-            onChangeText={setUsername}
-            placeholderTextColor={colorScheme === "dark" ? "#666" : "#999"}
-          />
-          <TextInput
-            style={styles.input}
             placeholder="Password"
             value={password}
             onChangeText={setPassword}
             secureTextEntry
+            placeholderTextColor={colorScheme === "dark" ? "#666" : "#999"}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Username"
+            value={username}
+            onChangeText={setUsername}
             placeholderTextColor={colorScheme === "dark" ? "#666" : "#999"}
           />
           <Button title="Login" onPress={handleLogin} />
@@ -92,17 +93,17 @@ export default function LoginScreen() {
         <ThemedView style={styles.formContainer}>
           <TextInput
             style={styles.input}
-            placeholder="Username"
-            value={username}
-            onChangeText={setUsername}
-            placeholderTextColor={colorScheme === "dark" ? "#666" : "#999"}
-          />
-          <TextInput
-            style={styles.input}
             placeholder="Password"
             value={password}
             onChangeText={setPassword}
             secureTextEntry
+            placeholderTextColor={colorScheme === "dark" ? "#666" : "#999"}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Username"
+            value={username}
+            onChangeText={setUsername}
             placeholderTextColor={colorScheme === "dark" ? "#666" : "#999"}
           />
           <TextInput

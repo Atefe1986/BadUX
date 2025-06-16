@@ -34,7 +34,7 @@ export default function RootLayout() {
           </Stack.Protected>
 
           <Stack.Protected guard={isLoggedIn}>
-            <Stack.Screen name="onboarding" options={{ gestureEnabled: false }} />
+            <Stack.Screen name="onboarding" options={{ headerShown: false }} />
             <Stack.Screen name="private" options={{ headerShown: false }} />
           </Stack.Protected>
           <Stack.Screen name="+not-found" />
