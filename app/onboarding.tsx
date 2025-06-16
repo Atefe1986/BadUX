@@ -1,7 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
-import { useRef, useState } from "react";
-import { Animated, Dimensions, FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
+import { useState } from "react";
+import { Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
+import { SceneMap, TabView } from "react-native-tab-view";
 
 import { SlideItem } from "@/components/SlideItem";
 import { ThemedText } from "@/components/ThemedText";
@@ -31,14 +32,18 @@ const slides = [
 ];
 
 export default function OnboardingScreen() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const slidesRef = useRef<FlatList>(null);
+  const [index, setIndex] = useState(0);
+  const [routes] = useState(slides.map((slide) => ({ key: slide.id, title: "" })));
+
+  const renderScene = SceneMap({
+    "1": () => <SlideItem {...slides[0]} />,
+    "2": () => <SlideItem {...slides[1]} />,
+    "3": () => <SlideItem {...slides[2]} />,
+  });
 
   const scrollToNext = () => {
-    if (currentIndex < slides.length - 1 && slidesRef.current) {
-      console.log("scrollToNext", currentIndex + 1);
-
-      slidesRef.current.scrollToOffset({ offset: (currentIndex + 1) * width });
+    if (index < slides.length - 1) {
+      setIndex(index + 1);
     }
   };
 
@@ -51,37 +56,32 @@ export default function OnboardingScreen() {
     }
   };
 
+  const renderTabBar = () => null;
+
   return (
     <ThemedView style={styles.container}>
       <View style={styles.slideContainer}>
-        <FlatList
-          data={slides}
-          renderItem={({ item }) => <SlideItem {...item} />}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          onViewableItemsChanged={({ viewableItems }) => {
-            const visibleIndex = viewableItems[0]?.index;
-            if (visibleIndex !== null && visibleIndex !== currentIndex) {
-              setCurrentIndex(visibleIndex);
-            }
-          }}
-          ref={slidesRef}
-          keyExtractor={(item) => item.id}
+        <TabView
+          navigationState={{ index, routes }}
+          renderScene={renderScene}
+          onIndexChange={setIndex}
+          initialLayout={{ width }}
+          renderTabBar={renderTabBar}
+          swipeEnabled={true}
         />
       </View>
 
       <View style={styles.navigation}>
         <View style={styles.pagination}>
           {slides.map((_, i) => {
-            if (i === currentIndex) {
-              return <Animated.View style={[styles.dot, { width: 20, opacity: 1 }]} key={i.toString()} />;
+            if (i === index) {
+              return <View style={[styles.dot, { width: 20, opacity: 1 }]} key={i.toString()} />;
             } else {
-              return <Animated.View style={[styles.dot, { width: 10, opacity: 0.3 }]} key={i.toString()} />;
+              return <View style={[styles.dot, { width: 10, opacity: 0.3 }]} key={i.toString()} />;
             }
           })}
         </View>
-        {currentIndex === slides.length - 1 ? (
+        {index === slides.length - 1 ? (
           <TouchableOpacity style={styles.button} onPress={handleFinish}>
             <ThemedText style={styles.buttonText}>Finish</ThemedText>
           </TouchableOpacity>

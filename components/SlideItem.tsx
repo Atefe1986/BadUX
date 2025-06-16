@@ -30,7 +30,8 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   emoji: {
-    fontSize: 80,
+    fontSize: 70,
+    lineHeight: 80,
     marginBottom: 20,
   },
   title: {
