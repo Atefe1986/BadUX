@@ -45,16 +45,19 @@ export default function LoginScreen() {
   };
 
   const handleSignup = () => {
-    if (password === confirmPassword) {
-      createUserWithEmailAndPassword(auth, username, password)
-        .then(() => {
-          Alert.alert("Signup Success", "Account created successfully!");
-          router.replace("/");
-        })
-        .catch((error) => {
-          Alert.alert("Signup Error", "Something is wrong!");
-        });
+    if (password !== confirmPassword) {
+      Alert.alert("Signup Error", "Passwords do not match!");
+      return;
     }
+
+    createUserWithEmailAndPassword(auth, username, password)
+      .then(() => {
+        Alert.alert("Signup Success", "Account created successfully!");
+        router.replace("/");
+      })
+      .catch((error) => {
+        Alert.alert("Signup Error", "Something is wrong!");
+      });
   };
 
   return (
