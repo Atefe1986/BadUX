@@ -40,19 +40,12 @@ export default function LoginScreen() {
         checkOnboardingStatus();
       })
       .catch((error) => {
-        Alert.alert(
-          "Login Error",
-          error.message,
-          [
-            {
-              text: "OK",
-              style: "default",
-            },
-          ],
+        Alert.alert("Login Error", error.message, [
           {
-            tintColor: "#FF8C42", // warm orange
-          }
-        );
+            text: "OK",
+            style: "default",
+          },
+        ]);
       });
   };
 
