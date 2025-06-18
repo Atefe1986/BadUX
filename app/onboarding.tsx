@@ -13,21 +13,21 @@ const { width } = Dimensions.get("window");
 const slides = [
   {
     id: "1",
-    title: "Welcome to BadUX",
-    description: "Experience a unique and innovative way to interact with your app",
-    image: "🎉",
+    title: "Connect & Share",
+    description: "Join a community of like-minded people and share your moments",
+    image: "👥",
   },
   {
     id: "2",
-    title: "Easy Navigation",
-    description: "Discover intuitive gestures and seamless transitions",
-    image: "🚀",
+    title: "Express Yourself",
+    description: "Create, post, and interact with others in unique ways",
+    image: "💫",
   },
   {
     id: "3",
-    title: "Let's Get Started",
-    description: "Your journey begins now",
-    image: "✨",
+    title: "Start Your Journey",
+    description: "Your social adventure begins here",
+    image: "🌟",
   },
 ];
 

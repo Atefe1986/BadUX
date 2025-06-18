@@ -48,10 +48,11 @@ export default function LoginScreen() {
     if (password === confirmPassword) {
       createUserWithEmailAndPassword(auth, username, password)
         .then(() => {
+          Alert.alert("Signup Success", "Account created successfully!");
           router.replace("/");
         })
         .catch((error) => {
-          Alert.alert("Signup Error", error.message);
+          Alert.alert("Signup Error", "Something is wrong!");
         });
     }
   };
