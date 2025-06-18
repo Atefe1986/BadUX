@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
-import { useState } from "react";
-import { Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Dimensions, StyleSheet, View } from "react-native";
 import { SceneMap, TabView } from "react-native-tab-view";
 
 import { SlideItem } from "@/components/SlideItem";
@@ -34,18 +34,33 @@ const slides = [
 export default function OnboardingScreen() {
   const [index, setIndex] = useState(0);
   const [routes] = useState(slides.map((slide) => ({ key: slide.id, title: "" })));
+  const [timeLeft, setTimeLeft] = useState(10); // 10 seconds per slide
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          if (index < slides.length - 1) {
+            setIndex(index + 1);
+            return 10;
+          } else {
+            clearInterval(timer);
+            handleFinish();
+            return 0;
+          }
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [index]);
 
   const renderScene = SceneMap({
     "1": () => <SlideItem {...slides[0]} />,
     "2": () => <SlideItem {...slides[1]} />,
     "3": () => <SlideItem {...slides[2]} />,
   });
-
-  const scrollToNext = () => {
-    if (index < slides.length - 1) {
-      setIndex(index + 1);
-    }
-  };
 
   const handleFinish = async () => {
     try {
@@ -67,11 +82,12 @@ export default function OnboardingScreen() {
           onIndexChange={setIndex}
           initialLayout={{ width }}
           renderTabBar={renderTabBar}
-          swipeEnabled={true}
+          swipeEnabled={false}
         />
       </View>
 
       <View style={styles.navigation}>
+        <ThemedText style={styles.timer}>Please wait {timeLeft} seconds...</ThemedText>
         <View style={styles.pagination}>
           {slides.map((_, i) => {
             if (i === index) {
@@ -81,15 +97,6 @@ export default function OnboardingScreen() {
             }
           })}
         </View>
-        {index === slides.length - 1 ? (
-          <TouchableOpacity style={styles.button} onPress={handleFinish}>
-            <ThemedText style={styles.buttonText}>Finish</ThemedText>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity style={styles.button} onPress={scrollToNext}>
-            <ThemedText style={styles.buttonText}>Next</ThemedText>
-          </TouchableOpacity>
-        )}
       </View>
     </ThemedView>
   );
@@ -120,16 +127,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#0a7ea4",
     marginHorizontal: 8,
   },
-  button: {
-    backgroundColor: "#0a7ea4",
-    paddingHorizontal: 30,
-    paddingVertical: 12,
-    borderRadius: 25,
-    marginTop: 10,
-  },
-  buttonText: {
-    color: "#fff",
+  timer: {
+    marginBottom: 15,
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "500",
   },
 });
