@@ -25,7 +25,12 @@ export default function ProfileScreen() {
     Alert.alert(
       "Permission Required",
       "Please grant permission to access your camera and photos in your device settings.",
-      [{ text: "OK" }]
+      [
+        {
+          text: "OK",
+          style: "default",
+        },
+      ]
     );
   };
 
@@ -57,7 +62,12 @@ export default function ProfileScreen() {
         setProfileImage({ uri: result.assets[0].uri });
       }
     } catch (error) {
-      Alert.alert("Error", `Failed to pick image: ${error instanceof Error ? error.message : "Unknown error"}`);
+      Alert.alert("Error", `Failed to pick image: ${error instanceof Error ? error.message : "Unknown error"}`, [
+        {
+          text: "OK",
+          style: "default",
+        },
+      ]);
     }
   };
 
@@ -69,17 +79,21 @@ export default function ProfileScreen() {
         {
           text: "Take Photo",
           onPress: () => pickImage("camera"),
+          style: "default",
         },
         {
           text: "Choose from Gallery",
           onPress: () => pickImage("library"),
+          style: "default",
         },
         {
           text: "Cancel",
           style: "cancel",
         },
       ],
-      { cancelable: true }
+      {
+        cancelable: true,
+      }
     );
   };
 
@@ -133,9 +147,6 @@ export default function ProfileScreen() {
           <Pressable style={[styles.button, styles.primaryButton]} onPress={handleEditProfile}>
             <ThemedText style={styles.buttonText}>Edit Profile</ThemedText>
           </Pressable>
-          <Pressable style={[styles.button, styles.secondaryButton]}>
-            <Ionicons name="share-social-outline" size={20} color="#666" />
-          </Pressable>
         </View>
 
         {/* Recent Posts Grid */}
@@ -169,7 +180,7 @@ const styles = StyleSheet.create({
     height: 120,
     borderRadius: 60,
     borderWidth: 4,
-    borderColor: "#fff",
+    borderColor: "#FFF5E6", // light beige
   },
   profileInfo: {
     alignItems: "center",
@@ -228,18 +239,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   primaryButton: {
-    backgroundColor: "#4267B2",
+    backgroundColor: "#FF8C42", // warm orange
     minWidth: 120,
   },
   secondaryButton: {
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    backgroundColor: "#D4A373", // warm beige
     width: 44,
     height: 44,
     borderRadius: 22,
     padding: 0,
   },
   buttonText: {
-    color: "#fff",
+    color: "#FFF5E6", // light beige
     fontWeight: "500",
   },
   postsSection: {
@@ -269,13 +280,13 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 0,
     bottom: 0,
-    backgroundColor: "#4267B2",
+    backgroundColor: "#FF8C42", // warm orange
     borderRadius: 15,
     width: 30,
     height: 30,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 2,
-    borderColor: "#fff",
+    borderColor: "#FFF5E6", // light beige
   },
 });

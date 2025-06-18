@@ -107,6 +107,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#FFF5E6", // light beige background
   },
   slideContainer: {
     flex: 3,
@@ -124,12 +125,13 @@ const styles = StyleSheet.create({
   dot: {
     height: 10,
     borderRadius: 5,
-    backgroundColor: "#0a7ea4",
+    backgroundColor: "#FF8C42", // warm orange to match our design system
     marginHorizontal: 8,
   },
   timer: {
     marginBottom: 15,
     fontSize: 16,
     fontWeight: "500",
+    color: "#4A4238", // dark warm brown for text
   },
 });

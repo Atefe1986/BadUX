@@ -37,10 +37,15 @@ const styles = StyleSheet.create({
   title: {
     textAlign: "center",
     marginBottom: 10,
+    fontSize: 28,
+    fontWeight: "600",
+    color: "#FF8C42", // warm orange for title
   },
   description: {
     textAlign: "center",
-    fontSize: 16,
+    fontSize: 18,
     paddingHorizontal: 20,
+    color: "#4A4238", // dark warm brown for description
+    lineHeight: 24,
   },
 });

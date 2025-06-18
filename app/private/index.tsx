@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   },
   postCard: {
     width: "100%",
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    backgroundColor: "#D4A373", // warm beige
     borderRadius: 12,
     padding: 16,
     marginTop: 20,
