@@ -1,7 +1,7 @@
 import { router } from "expo-router";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
-import { Alert, Button, Pressable, StyleSheet, TextInput } from "react-native";
+import { Alert, Pressable, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -40,23 +40,51 @@ export default function LoginScreen() {
         checkOnboardingStatus();
       })
       .catch((error) => {
-        Alert.alert("Login Error", error.message);
+        Alert.alert(
+          "Login Error",
+          error.message,
+          [
+            {
+              text: "OK",
+              style: "default",
+              color: "#FF8C42", // warm orange
+            },
+          ],
+          {
+            tintColor: "#FF8C42", // warm orange
+          }
+        );
       });
   };
 
   const handleSignup = () => {
     if (password !== confirmPassword) {
-      Alert.alert("Signup Error", "Passwords do not match!");
+      Alert.alert("Signup Error", "Passwords do not match!", [
+        {
+          text: "OK",
+          style: "default",
+        },
+      ]);
       return;
     }
 
     createUserWithEmailAndPassword(auth, username, password)
       .then(() => {
-        Alert.alert("Signup Success", "Account created successfully!");
+        Alert.alert("Signup Success", "Account created successfully!", [
+          {
+            text: "OK",
+            style: "default",
+          },
+        ]);
         router.replace("/");
       })
       .catch((error) => {
-        Alert.alert("Signup Error", "Something is wrong!");
+        Alert.alert("Signup Error", "Something is wrong!", [
+          {
+            text: "OK",
+            style: "default",
+          },
+        ]);
       });
   };
 
@@ -79,16 +107,18 @@ export default function LoginScreen() {
             value={password}
             onChangeText={setPassword}
             secureTextEntry
-            placeholderTextColor={colorScheme === "dark" ? "#666" : "#999"}
+            placeholderTextColor={colorScheme === "dark" ? "#D4A373" : "#D4A373"}
           />
           <TextInput
             style={styles.input}
             placeholder="Username"
             value={username}
             onChangeText={setUsername}
-            placeholderTextColor={colorScheme === "dark" ? "#666" : "#999"}
+            placeholderTextColor={colorScheme === "dark" ? "#D4A373" : "#D4A373"}
           />
-          <Button title="Login" onPress={handleLogin} />
+          <TouchableOpacity style={styles.customButton} onPress={handleLogin}>
+            <ThemedText style={styles.buttonText}>Login</ThemedText>
+          </TouchableOpacity>
         </ThemedView>
       ) : (
         <ThemedView style={styles.formContainer}>
@@ -98,14 +128,14 @@ export default function LoginScreen() {
             value={password}
             onChangeText={setPassword}
             secureTextEntry
-            placeholderTextColor={colorScheme === "dark" ? "#666" : "#999"}
+            placeholderTextColor={colorScheme === "dark" ? "#D4A373" : "#D4A373"}
           />
           <TextInput
             style={styles.input}
             placeholder="Username"
             value={username}
             onChangeText={setUsername}
-            placeholderTextColor={colorScheme === "dark" ? "#666" : "#999"}
+            placeholderTextColor={colorScheme === "dark" ? "#D4A373" : "#D4A373"}
           />
           <TextInput
             style={styles.input}
@@ -113,9 +143,11 @@ export default function LoginScreen() {
             value={confirmPassword}
             onChangeText={setConfirmPassword}
             secureTextEntry
-            placeholderTextColor={colorScheme === "dark" ? "#666" : "#999"}
+            placeholderTextColor={colorScheme === "dark" ? "#D4A373" : "#D4A373"}
           />
-          <Button title="Signup" onPress={handleSignup} />
+          <TouchableOpacity style={styles.customButton} onPress={handleSignup}>
+            <ThemedText style={styles.buttonText}>Signup</ThemedText>
+          </TouchableOpacity>
         </ThemedView>
       )}
     </ThemedView>
@@ -128,6 +160,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 20,
+    backgroundColor: "#FFF5E6", // light beige background
   },
   tabContainer: {
     flexDirection: "row",
@@ -136,19 +169,38 @@ const styles = StyleSheet.create({
   },
   tabText: {
     fontSize: 18,
+    color: "#D4A373", // warm beige
   },
   activeTab: {
     textDecorationLine: "underline",
+    color: "#FF8C42", // warm orange
   },
   formContainer: {
     width: "80%",
     gap: 15,
+    backgroundColor: "rgba(212, 163, 115, 0.1)", // subtle warm beige background
+    padding: 20,
+    borderRadius: 10,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#666",
+    borderColor: "#D4A373", // warm beige
     borderRadius: 5,
     padding: 10,
-    color: "white",
+    color: "#4A4238", // dark warm brown
+    backgroundColor: "#FFF5E6", // light beige
+  },
+  customButton: {
+    backgroundColor: "#FF8C42", // warm orange
+    padding: 15,
+    borderRadius: 8,
+    width: "100%",
+    alignItems: "center",
+    marginTop: 10,
+  },
+  buttonText: {
+    color: "#FFF5E6", // light beige
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
