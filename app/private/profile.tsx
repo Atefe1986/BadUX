@@ -242,13 +242,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FF8C42", // warm orange
     minWidth: 120,
   },
-  secondaryButton: {
-    backgroundColor: "#D4A373", // warm beige
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    padding: 0,
-  },
+
   buttonText: {
     color: "#FFF5E6", // light beige
     fontWeight: "500",

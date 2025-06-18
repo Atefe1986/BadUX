@@ -8,7 +8,6 @@ import { ThemedView } from "@/components/ThemedView";
 export default function SocialFeedScreen() {
   return (
     <ThemedView style={styles.container}>
-      {/* Hero Section */}
       <View style={styles.heroSection}>
         <Image source={require("@/assets/images/icon.png")} style={styles.heroImage} contentFit="cover" />
         <ThemedText type="title" style={styles.appTitle}>
@@ -24,7 +23,6 @@ export default function SocialFeedScreen() {
         Connect with friends, share moments, and discover amazing stories from around the world.
       </ThemedText>
 
-      {/* Sample Post Card */}
       <ThemedView style={styles.postCard}>
         <View style={styles.postHeader}>
           <View style={styles.userInfo}>
