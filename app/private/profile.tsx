@@ -1,107 +1,273 @@
+import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { Platform, StyleSheet } from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import { router } from "expo-router";
+import { useState } from "react";
+import { Alert, Pressable, ScrollView, StyleSheet, View } from "react-native";
 
-import { Collapsible } from "@/components/Collapsible";
-import { ExternalLink } from "@/components/ExternalLink";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { IconSymbol } from "@/components/ui/IconSymbol";
 
-export default function TabTwoScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
+export default function ProfileScreen() {
+  const [profileImage, setProfileImage] = useState(require("@/assets/images/icon.png"));
+
+  const requestPermission = async (permissionType: "camera" | "mediaLibrary") => {
+    if (permissionType === "camera") {
+      const { status } = await ImagePicker.requestCameraPermissionsAsync();
+      return status === "granted";
+    } else {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      return status === "granted";
+    }
+  };
+
+  const handleImageError = () => {
+    Alert.alert(
+      "Permission Required",
+      "Please grant permission to access your camera and photos in your device settings.",
+      [{ text: "OK" }]
+    );
+  };
+
+  const pickImage = async (source: "camera" | "library") => {
+    try {
+      const hasPermission = await requestPermission(source === "camera" ? "camera" : "mediaLibrary");
+
+      if (!hasPermission) {
+        handleImageError();
+        return;
       }
-    >
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens: <ThemedText type="defaultSemiBold">app/private/index.tsx</ThemedText> and{" "}
-          <ThemedText type="defaultSemiBold">app/private/explore.tsx</ThemedText>
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.8,
+      });
+
+      if (!result.canceled) {
+        setProfileImage({ uri: result.assets[0].uri });
+      }
+    } catch (error) {
+      Alert.alert("Error", "Failed to pick image");
+    }
+  };
+
+  const handleProfileImagePress = () => {
+    Alert.alert(
+      "Change Profile Photo",
+      "Choose a new profile photo",
+      [
+        {
+          text: "Take Photo",
+          onPress: () => pickImage("camera"),
+        },
+        {
+          text: "Choose from Gallery",
+          onPress: () => pickImage("library"),
+        },
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  const handleEditProfile = () => {
+    router.push("/private/edit-profile");
+  };
+
+  return (
+    <ThemedView style={styles.container}>
+      <View style={styles.headerImageContainer}>
+        <Pressable onPress={handleProfileImagePress}>
+          <Image source={profileImage} style={styles.profileImage} contentFit="cover" />
+          <View style={styles.editIconContainer}>
+            <Ionicons name="camera" size={16} color="#fff" />
+          </View>
+        </Pressable>
+      </View>
+      <View style={styles.profileInfo}>
+        <ThemedText type="title" style={styles.name}>
+          Atefeh
         </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/private/_layout.tsx</ThemedText> sets up the tab
-          navigator.
+        <View style={styles.bioContainer}>
+          <Ionicons name="location-outline" size={16} color="#666" />
+          <ThemedText style={styles.bioText}>Sweden</ThemedText>
+        </View>
+
+        {/* Stats Section */}
+        <View style={styles.statsContainer}>
+          <View style={styles.statItem}>
+            <ThemedText style={styles.statNumber}>342</ThemedText>
+            <ThemedText style={styles.statLabel}>Posts</ThemedText>
+          </View>
+          <View style={styles.statItem}>
+            <ThemedText style={styles.statNumber}>15.3K</ThemedText>
+            <ThemedText style={styles.statLabel}>Followers</ThemedText>
+          </View>
+          <View style={styles.statItem}>
+            <ThemedText style={styles.statNumber}>1,242</ThemedText>
+            <ThemedText style={styles.statLabel}>Following</ThemedText>
+          </View>
+        </View>
+
+        {/* Bio Section */}
+        <ThemedText style={styles.bio}>
+          🚀 UX designer | 📱 Mobile App Enthusiast{"\n"}
+          Passionate about creating intuitive user experiences and exploring the latest in mobile technology.
         </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{" "}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{" "}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for different screen densities
-        </ThemedText>
-        <Image source={require("@/assets/images/react-logo.png")} style={{ alignSelf: "center" }} />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{" "}
-          <ThemedText style={{ fontFamily: "SpaceMono" }}>custom fonts such as this one.</ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{" "}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect what the user&apos;s
-          current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{" "}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses the powerful{" "}
-          <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText> library to create a waving hand
-          animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText> component provides a
-              parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+
+        {/* Action Buttons */}
+        <View style={styles.actionButtons}>
+          <Pressable style={[styles.button, styles.primaryButton]} onPress={handleEditProfile}>
+            <ThemedText style={styles.buttonText}>Edit Profile</ThemedText>
+          </Pressable>
+          <Pressable style={[styles.button, styles.secondaryButton]}>
+            <Ionicons name="share-social-outline" size={20} color="#666" />
+          </Pressable>
+        </View>
+
+        {/* Recent Posts Grid */}
+        <View style={styles.postsSection}>
+          <ThemedText style={styles.sectionTitle}>Recent Posts</ThemedText>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.postsGrid}>
+            {[1, 2, 3].map((item) => (
+              <View key={item} style={styles.postThumbnail}>
+                <Image source={require("@/assets/images/icon.png")} style={styles.thumbnailImage} contentFit="cover" />
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+      </View>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: "#808080",
-    bottom: -90,
-    left: -35,
-    position: "absolute",
+  container: {
+    flex: 1,
+    padding: 16,
   },
-  titleContainer: {
+  headerImageContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  profileImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    borderWidth: 4,
+    borderColor: "#fff",
+  },
+  profileInfo: {
+    alignItems: "center",
+    marginTop: 8,
+  },
+  name: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 8,
+  },
+  bioContainer: {
     flexDirection: "row",
+    alignItems: "center",
     gap: 8,
+    marginBottom: 16,
+  },
+  bioText: {
+    fontSize: 16,
+    opacity: 0.8,
+  },
+  statsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
+    paddingVertical: 16,
+    borderRadius: 12,
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    marginBottom: 16,
+  },
+  statItem: {
+    alignItems: "center",
+  },
+  statNumber: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  statLabel: {
+    fontSize: 14,
+    opacity: 0.7,
+  },
+  bio: {
+    textAlign: "center",
+    marginBottom: 16,
+    lineHeight: 20,
+  },
+  actionButtons: {
+    flexDirection: "row",
+    gap: 12,
+    marginBottom: 24,
+  },
+  button: {
+    paddingHorizontal: 24,
+    paddingVertical: 8,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  primaryButton: {
+    backgroundColor: "#4267B2",
+    minWidth: 120,
+  },
+  secondaryButton: {
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    padding: 0,
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "500",
+  },
+  postsSection: {
+    width: "100%",
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    marginBottom: 12,
+    alignSelf: "flex-start",
+  },
+  postsGrid: {
+    flexDirection: "row",
+  },
+  postThumbnail: {
+    width: 120,
+    height: 120,
+    marginRight: 12,
+    borderRadius: 8,
+    overflow: "hidden",
+  },
+  thumbnailImage: {
+    width: "100%",
+    height: "100%",
+  },
+  editIconContainer: {
+    position: "absolute",
+    right: 0,
+    bottom: 0,
+    backgroundColor: "#4267B2",
+    borderRadius: 15,
+    width: 30,
+    height: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: "#fff",
   },
 });
