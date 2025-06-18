@@ -1,3 +1,4 @@
+import { Image } from "expo-image";
 import { router } from "expo-router";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import React, { useEffect, useState } from "react";
@@ -122,6 +123,10 @@ export default function LoginScreen() {
 
   return (
     <ThemedView style={styles.container}>
+      <View style={styles.logoContainer}>
+        <Image source={require("@/assets/images/icon.png")} style={styles.logo} />
+        <ThemedText style={styles.appName}>Social Connect</ThemedText>
+      </View>
       <ThemedView style={styles.tabContainer}>
         <Pressable onPress={() => setActiveTab("login")}>
           <ThemedText style={[styles.tabText, activeTab === "login" && styles.activeTab]}>Login</ThemedText>
@@ -279,5 +284,22 @@ const styles = StyleSheet.create({
     color: "#FFF5E6",
     fontSize: 16,
     fontWeight: "600",
+  },
+  logoContainer: {
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  appName: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#FF8C42",
+    letterSpacing: 1,
+    marginBottom: 8,
+  },
+  logo: {
+    width: 80,
+    height: 80,
+    borderRadius: 20,
+    marginBottom: 10,
   },
 });
