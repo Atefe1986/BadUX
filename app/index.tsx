@@ -47,7 +47,6 @@ export default function LoginScreen() {
             {
               text: "OK",
               style: "default",
-              color: "#FF8C42", // warm orange
             },
           ],
           {
