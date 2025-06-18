@@ -1,7 +1,7 @@
 import { router } from "expo-router";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
-import { Button, Pressable, StyleSheet, TextInput } from "react-native";
+import { Alert, Button, Pressable, StyleSheet, TextInput } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -40,8 +40,7 @@ export default function LoginScreen() {
         checkOnboardingStatus();
       })
       .catch((error) => {
-        console.error("Login error:", error);
-        // Handle login error (e.g., show an alert)
+        Alert.alert("Login Error", error.message);
       });
   };
 
@@ -49,12 +48,10 @@ export default function LoginScreen() {
     if (password === confirmPassword) {
       createUserWithEmailAndPassword(auth, username, password)
         .then(() => {
-          setIsLoggedIn(true);
-          router.replace("/onboarding");
+          router.replace("/");
         })
         .catch((error) => {
-          console.error("Signup error:", error);
-          // Handle signup error (e.g., show an alert)
+          Alert.alert("Signup Error", error.message);
         });
     }
   };
