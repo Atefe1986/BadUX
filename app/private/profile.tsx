@@ -57,7 +57,7 @@ export default function ProfileScreen() {
         setProfileImage({ uri: result.assets[0].uri });
       }
     } catch (error) {
-      Alert.alert("Error", "Failed to pick image");
+      Alert.alert("Error", `Failed to pick image: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   };
 
